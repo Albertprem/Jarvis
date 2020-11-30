@@ -123,3 +123,128 @@ def message():
             speak("Sir, You have no messages.")
     else:
         print("Not logged in")
+
+def time():
+    time = datetime.datetime.now().strftime('%I:%M:%S')
+    speak(f"Sir, the current time is {time}.")
+
+def date():
+    year = int(datetime.datetime.now().year)
+    month = int(datetime.datetime.now().month)
+    date = int(datetime.datetime.now().day)
+    speak(f"Sir, the current year is {year}, current month is {month} and the current date is {date}")
+
+def google_search(audio_data):
+    url = "https://www.google.com/?#q=" + audio_data
+    webbrowser.open(url)
+    speak(f"Sir, getting the result for {audio_data} from google.com")
+
+def youtube_search(audio_data):
+    url = "https:www.youtube.com/?#query=" + audio_data
+    webbrowser.open(url)
+    speak(f"Sir, getting the result for {audio_data} from youtube.com")
+
+def calculate(audio_data):
+    app_id = '8REQUG-YQ7JGY96T8'
+    client = wolframalpha.Client(app_id)
+    res = client.query(audio_data)
+    answer = next(res.results).text
+    speak(answer)
+
+def command():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.energy_threshold = 400
+        r.dynamic_energy_threshold = True
+        r.adjust_for_ambient_noise(source, duration=1)
+        r.pause_threshold = 1
+        audio = r.listen(source)
+
+    try:
+        query = r.recognize_google(audio)
+        print(query)
+        if 'Jarvis' in query:
+            speak("Yes, Sir")
+        elif 'tell me the date' in query or 'tell me date' in query:
+            date()
+        elif 'tell me the time' in query or 'what time is it' in query or 'tell time' in query:
+            time()
+        elif 'thank you' in query:
+            speak('No problem sir')
+        elif 'open Google' in query:
+            webbrowser.open("https://www.google.com")
+            speak("Opening google...")
+        elif 'Google search' in query:
+            speak('What do you want to search')
+            audio_data = command()
+            google_search(audio_data)
+        elif 'open YouTube' in query:
+            webbrowser.open("https://www.youtube.com")
+            speak("Opening Youtube....")
+        elif 'YouTube search' in query:
+            speak('What do you want to search?')
+            audio_data = command()
+            youtube_search(audio_data)
+        elif 'open Facebook' in query:
+            webbrowser.open_new_tab("https://www.facebook.com")
+            speak("Opening Facebook")
+        elif 'open Gmail' in query:
+            webbrowser.open("https://mail.google.com/mail/u/0/#inbox")
+            speak("Opening Gmail..")
+        elif 'open maps' in query or 'show my location' in query:
+            webbrowser.open("https://www.google.com/maps/@26.6235458,87.3614451,16z")
+            speak("Opening Maps...")
+        elif 'calculate' in query:
+            speak('Tell me sir')
+            audio_data = command()
+            calculate(audio_data)
+        elif 'tell me' in query:
+            audio_data = query.replace('tell me', '')
+            calculate(audio_data)
+        elif "what's the weather" in query or 'tell me the temperature' in query or "what's the temperature" in query:
+            weather()
+        elif 'click the mouse' in query or 'click mouse' in query or 'click' in query:
+            click()
+        elif 'take a screenshot' in query or 'take screenshot' in query:
+            screenshot()
+        elif 'Wikipedia' in query:
+            query = query.replace("Wikipedia", "")
+            results = wikipedia.summary(query, sentences=2)
+            speak('Acoording to wikipedia, ')
+            speak(results)
+        elif 'close current window' in query:
+            pyautogui.keyDown('alt')
+            pyautogui.press('f4')
+            pyautogui.keyUp('alt')
+            speak('Current window is closed.')
+        elif 'battery percentage' in query or 'percentage in battery' in query or 'percent in my pc' in query:
+            battery()
+        elif 'shutdown' in query or 'shut down' in query or 'close my PC' in query:
+            shutDown()
+        elif 'sleep' in query or 'sleep mode' in query:
+            Sleep()
+        elif 'check message' in query or 'check messages' in query or 'check new messages' in query or 'check new message' in query or 'any new messages' in query or 'any new messages' in query or 'any new message' in query or 'any messages' in query or 'any message' in query:
+            message()
+        elif 'username' in query or 'user' in query or 'user name' in query:
+            username()
+        elif 'open zinc file' in query or 'zinc' in query:
+            os.startfile("C://Users//Albertprem//Desktop//Eduknowledge//class-12//Science//Chemistry//zinc.html")
+            speak("Opening zinc.html")
+
+    except:
+        return None
+    return query
+
+def greeting():
+    speak('Welcome back sir.')
+    time()
+    date()
+
+if __name__ == '__main__':
+    greeting()
+    weather()
+    speak("Getting battery information....")
+    battery()
+    while True:
+        command()
