@@ -22,8 +22,14 @@ def speak(audio):
 def click():
     pyautogui.click()
 
+def username():
+    username = psutil.users()
+    for user_name in username:
+        first_name = user_name[0]
+        speak(f"Sir, this computer is signed to {first_name} as a username.")
+    
 def screenshot():
-    pyautogui.screenshot("C://Users//Albertprem//Desktop//screenshot.png")
+    pyautogui.screenshot(f"C://Users//{first_name}//Desktop//screenshot.png")
 
 def battery():
     battery = psutil.sensors_battery()
@@ -69,16 +75,10 @@ def Sleep():
     pyautogui.press('s')
     pyautogui.press('enter')
 
-def username():
-    username = psutil.users()
-    for user_name in username:
-        first_name = user_name[0]
-        speak(f"Sir, this computer is signed to {first_name} as a username.")
-
 def weather():
     speak("Checking the details for weather...")
     URL = "https://weather.com/weather/today/l/26.62,87.36?par=google&temp=c"
-    header = {"User-Agent":'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'}
+    header = {"User-Agent":'your user agent'}
     page = requests.get(URL, headers=header)
     soup = BeautifulSoup(page.content, 'html.parser')
     temperature = soup.find(class_="CurrentConditions--tempValue--3KcTQ").get_text()
@@ -96,7 +96,7 @@ def message():
     speak("Checking for messages....")
     userID = "your email"
     psd = 'your password'
-    useragent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+    useragent = "you user agent"
 
     cli = Client(userID, psd, user_agent=useragent, max_tries=1)
     if cli.isLoggedIn():
@@ -228,9 +228,6 @@ def command():
             message()
         elif 'username' in query or 'user' in query or 'user name' in query:
             username()
-        elif 'open zinc file' in query or 'zinc' in query:
-            os.startfile("C://Users//Albertprem//Desktop//Eduknowledge//class-12//Science//Chemistry//zinc.html")
-            speak("Opening zinc.html")
 
     except:
         return None
